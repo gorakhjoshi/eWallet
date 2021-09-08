@@ -84,12 +84,17 @@ const displayBalance = function (movements) {
   labelBalance.textContent = `${balance}€`
 }
 
+const calcDisplaySummary = function(movements) {
+  const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov,0)
+  labelSumIn.textContent = `${incomes}€`
+} 
+
 
 // username(createUsername)
 createUsername(accounts)
+// displayBalance(account1.movements)
 
-
-displayBalance(account1.movements)
+calcDisplaySummary(account1.movements)
 
 
 
