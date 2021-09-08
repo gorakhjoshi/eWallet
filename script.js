@@ -79,9 +79,17 @@ const createUsername = (accounts) => {
   })
 }
 
+const displayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0)
+  labelBalance.textContent = `${balance}€`
+}
+
 
 // username(createUsername)
+createUsername(accounts)
 
-console.log(account1)
+
+displayBalance(account1.movements)
+
 
 
