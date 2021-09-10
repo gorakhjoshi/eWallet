@@ -96,12 +96,15 @@ const calcDisplaySummary = function(movements) {
   labelSumInterest.textContent = `${interest}€`
 } 
 
+btnLogin.addEventListener('click', function(e) {
+  e.preventDefault()
+
+})
+
 
 // username(createUsername)
 createUsername(accounts)
 // displayBalance(account1.movements)
 
 calcDisplaySummary(account1.movements)
-
-
 
