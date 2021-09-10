@@ -96,10 +96,20 @@ const calcDisplaySummary = function(movements) {
   labelSumInterest.textContent = `${interest}€`
 } 
 
+let currentAccount;
+
 btnLogin.addEventListener('click', function(e) {
   e.preventDefault()
+currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value)
+
+// if(currentAccount.pin === inputLoginPin)
+if(currentAccount && pin === Number(inputLoginPin.value)) {
+  labelWelcome.textContent = `Welcome back, ${currentAccount.owner}`
+}
 
 })
+
+
 
 
 // username(createUsername)
