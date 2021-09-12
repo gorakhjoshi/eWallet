@@ -70,7 +70,6 @@ const displayMovement = function (movements) {
   })
 }
 
-displayMovement(account1.movements)
 
 
 const createUsername = (accounts) => {
@@ -79,42 +78,74 @@ const createUsername = (accounts) => {
   })
 }
 
-const displayBalance = function (movements) {
-  const balance = movements.reduce((acc, mov) => acc + mov, 0)
-  labelBalance.textContent = `${balance}€`
+createUsername(accounts)
+
+
+const displayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0)
+  labelBalance.textContent = `${acc.balance}€`
 }
 
-const calcDisplaySummary = function(movements) {
-  const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov,0)
+const calcDisplaySummary = function (movements) {
+  const incomes = movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0)
   labelSumIn.textContent = `${incomes}€`
 
-  const out = movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov,0)
+  const out = movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov, 0)
   labelSumOut.textContent = `${out}€`
 
-  const interest = movements.filter(mov => mov > 0).map(deposit => deposit * 1.2 /100).filter((int) => int >=1 ).reduce((acc, int) => acc + int, 0)
+  const interest = movements.filter(mov => mov > 0).map(deposit => deposit * 1.2 / 100).filter((int) => int >= 1).reduce((acc, int) => acc + int, 0)
 
   labelSumInterest.textContent = `${interest}€`
+}
+
+const updateUI = (acc) => {
+  displayMovement(acc.movements)
+
+  displayBalance(acc)
+
+  calcDisplaySummary(acc.movements)
 } 
 
 let currentAccount;
 
-btnLogin.addEventListener('click', function(e) {
+btnLogin.addEventListener('click', function (e) {
   e.preventDefault()
-currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value)
+  currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value)
 
-// if(currentAccount.pin === inputLoginPin)
-if(currentAccount && pin === Number(inputLoginPin.value)) {
-  labelWelcome.textContent = `Welcome back, ${currentAccount.owner}`
-}
+  // if(currentAccount.pin === inputLoginPin)
+  if (currentAccount ?.pin === Number(inputLoginPin.value)) {
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`
+  }
+
+  containerApp.style.opacity = 100;
+
+  inputLoginUsername.value = inputLoginPin.value = ''
+
+  updateUI(currentAccount)
 
 })
 
 
 
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(
+    (acc) => acc.username === inputTransferTo.value
+  );
+  inputTransferAmount.value = inputTransferTo.value = '';
 
-// username(createUsername)
-createUsername(accounts)
-// displayBalance(account1.movements)
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    currentAccount.balance >= amount &&
+    receiverAcc?.username !== currentAccount.username
+  ) {
+    // Doing the transfer
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
 
-calcDisplaySummary(account1.movements)
-
+    // Update UI
+    updateUI(currentAccount);
+  }
+});
